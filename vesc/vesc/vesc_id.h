@@ -1,5 +1,6 @@
 //https://github.com/vedderb/bldc/blob/master/datatypes.h
-//Updated on Sep 12, HmT
+#ifndef VESC_ID_H
+#define VESC_ID_H
 typedef enum {
     CAN_PACKET_SET_DUTY = 0,
     CAN_PACKET_SET_CURRENT,
@@ -34,3 +35,4 @@ typedef enum {
     CAN_PACKET_CONF_STORE_BATTERY_CUT,
     CAN_PACKET_SHUTDOWN
 } CAN_PACKET_ID;
+#endif

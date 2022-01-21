@@ -8,7 +8,10 @@ void vesc::vesc_init(CAN* _CAN, int baud){
 }
 
 void vesc::set_monitor_id(uint8_t id){
-    current_id = id;
+    if(current_id != id){
+        current_id = id;
+        reset_param();
+    }
 }
 
 void vesc::package_msg(uint8_t* buffer, int32_t number, int32_t *index) {
