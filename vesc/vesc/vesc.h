@@ -22,11 +22,11 @@ public:
     int16_t read_esc_current(uint8_t id);                       //read the input bus current
     int16_t read_input_voltage(uint8_t id);                     //read the input voltage of the bus
     int16_t read_fet_temp(uint8_t id);                          //read the motor tempeture of the FET
+    void can_read();
 
 private:
     void package_msg(uint8_t* buffer, int32_t number, int32_t *index);
     bool can_send(uint32_t id, uint8_t packet[], int32_t len);
-    void can_read();
     void reset_param();
 
     uint8_t current_id;

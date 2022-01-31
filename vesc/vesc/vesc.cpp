@@ -4,7 +4,6 @@
 void vesc::vesc_init(CAN* _CAN, int baud){
     can = _CAN;
     can -> frequency(baud);
-    can -> attach(callback(this, &vesc::can_read), CAN::RxIrq);
 }
 
 void vesc::set_monitor_id(uint8_t id){
