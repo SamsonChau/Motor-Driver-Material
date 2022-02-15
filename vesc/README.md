@@ -40,5 +40,8 @@ VESC tools version: 4.00
     float read_input_voltage(int id);                     //read the input voltage of the bus
     float read_fet_temp(int id);                          //read the motor tempeture of the FET
 ```
+all data readed are same as VESC Tools displayed
 
+# update 
+2022-2-16
 
