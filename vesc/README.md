@@ -74,7 +74,6 @@ all data readed are same as VESC Tools displayed
     1. Same as the above
     2. Check VESC Hardware version
 
-# Disclaimer
 # update 
 2022-2-17
 
