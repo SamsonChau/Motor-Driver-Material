@@ -19,6 +19,8 @@ Sample program and library to communicate VESC and STM32 via can bus.use mbed os
 
 ## VESC tool setting
 VESC tools version: 4.00
+VESC HW: 6.0
+VESC Firmware: 5.03/6.0
 ![](https://github.com/SamsonChau/Motor-Driver-Material/blob/main/vesc/Doc/vesc_can_setting.png)
 ![](https://github.com/SamsonChau/Motor-Driver-Material/blob/main/vesc/Doc/vesc_remote_setting.png)
 
@@ -41,7 +43,38 @@ VESC tools version: 4.00
     float read_fet_temp(int id);                          //read the motor tempeture of the FET
 ```
 all data readed are same as VESC Tools displayed
+* note the VESC ma
 
+# Verifyed platform (will keep update)
+1. STM32F446RE -> TJA1050 -> Maytech VESC6
+    * all things work as intended with the config above
+    
+2. STM32F446RE -> IGGG_CAN_ISO -> Maytech VESC6
+    * all things work as intended with the config above
+    
+3. STM32F446RE -> IGGG_CAN_ISO -> FilpSky Due VESC 6
+    * can_send but not read with the config above, may try to lowering the baudrate later
+    
+4. STM32F446RE -> IGGG_CAN_ISO -> FilpSky VESC 6.7 
+    * yet to test
+
+# Debuging 
+1. Can send command but can not read (all time)
+   Possible Solution:
+   1. Make Sure the wiring is correct and Secure (CAN Tx Rx, CAN High, CAN Low)
+   2. Make Sure the VESC is config correctly
+   3. Make Sure the STM pin config is correct 
+   4. Make sure CAN ID is correct on both side
+   5. Try lowering the Status Sending Frequency, CAN Baud Rate
+   6. Update the VESC Tools or Firmware  
+   7. Try a Shorter CAN BUS wire
+
+2. Can send command but only can be read when the command enable / when the load command once
+    Possible Solution:
+    1. Same as the above
+    2. Check VESC Hardware version
+
+# Disclaimer
 # update 
-2022-2-16
+2022-2-17
 
