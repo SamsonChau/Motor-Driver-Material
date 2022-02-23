@@ -46,7 +46,7 @@ int can_id = 90;
 
 // define the can bus object
 // CAN can1(PA_11, PA_12, can_baud);  (choose one)
-CAN can(PB_5, PB_6, can_baud);    
+CAN can(PB_5, PB_6, can_baud);              // define thhe can bus as can_Tx_pin can_Rx_pin can baudrate
 
 //define the vesc object of the vesc
 vesc _vesc1;
@@ -61,14 +61,14 @@ vesc _vesc1;
         2. control_thread (send the vesc control cmd and the UART debug message in 20Hz)
 */
 ////////////////////////////////////////////////////////////////////////////
-Thread vesc_thread(osPriorityNormal);
-Thread control_thread(osPriorityLow);
+Thread vesc_thread(osPriorityNormal);       // define a thread in Normal Priorty
+Thread control_thread(osPriorityLow);       // define a thread in Low Priorty 
 
-EventQueue printfQueue;
-EventQueue readQueue;
+EventQueue printfQueue;                     // define a Quenue to pipeline the Thread
+EventQueue readQueue;                       // define a Quenue to pipeline the Thread
 
-Ticker ThreadTicker;
-Ticker printreadTicker;
+Ticker ThreadTicker;                        // define a Ticker(SysTick) as a trigger of the Thread
+Ticker printreadTicker;                     // define a Ticker(SysTick) as a trigger of the Thread
                                                                                                                                                                                                                                                                                                                                 
 //call back of the vesc thread function 
 void vesc_th() { 
@@ -95,11 +95,12 @@ int main() {
   _vesc1.vesc_init(&can, can_baud);
   _vesc1.set_monitor_id(can_id);        //set up the moitoring ID of the VESC object
   
-  // start the threads
+  // start the threads and run forever
   vesc_thread.start(callback(&readQueue, &EventQueue::dispatch_forever));
   control_thread.start(callback(&printfQueue, &EventQueue::dispatch_forever));
     
   //setup the trigger of the thread, use Tickers to achieve
-  printreadTicker.attach(readQueue.event(&vesc_th), 0.001);
-  ThreadTicker.attach(printfQueue.event(&control_cmd), 0.05);
+  printreadTicker.attach(readQueue.event(&vesc_th), 0.001);     // trigger once after 0.001 sec 
+  ThreadTicker.attach(printfQueue.event(&control_cmd), 0.05);   // trigger once after 0.05 sec
+  
 }
