@@ -102,5 +102,55 @@ int main() {
   //setup the trigger of the thread, use Tickers to achieve
   printreadTicker.attach(readQueue.event(&vesc_th), 0.001);     // trigger once after 0.001 sec 
   ThreadTicker.attach(printfQueue.event(&control_cmd), 0.05);   // trigger once after 0.05 sec
-  
 }
+
+/* standalone version
+#include "mbed.h"
+#include "vesc.h"
+
+#define TARGET_TX_PIN USBTX
+#define TARGET_RX_PIN USBRX
+static BufferedSerial serial_port(TARGET_TX_PIN, TARGET_RX_PIN, 115200);
+
+// set the id and can bus baud rate of the VESC
+int can_baud = 1000000;
+int can_id = 90;
+
+// define the can bus object
+// CAN can1(PA_11, PA_12, can_baud);  (choose one)
+CAN can(PB_5, PB_6,can_baud); // define thhe can bus as can_Tx_pin can_Rx_pin can baudrate
+
+// define the vesc object of the vesc
+vesc _vesc1;
+
+Ticker readTicker;
+
+// call back of the vesc thread function
+void vesc_th() {
+  // update the vesc1 parameter once
+  _vesc1.can_read(can_id);
+}
+
+int main() {
+  // intitial the vesc class at startup, need to pass the canbus interface to
+  // the init  function
+  _vesc1.vesc_init(&can, can_baud);
+  _vesc1.set_monitor_id(can_id); // set up the moitoring ID of the VESC object
+  
+  // setup the trigger of the thread, use Tickers to achieve
+  readTicker.attach(&vesc_th, 0.001); // trigger once after 0.001 sec
+  
+  while (true) {
+    //_vesc1.set_rpm(can_id, 1000);         // set the vesc 1 erpm/rpm to 1000rpm
+    // print out the values
+    printf("position: %.2f ", _vesc1.read_pos(can_id));
+    printf("rpm: %.2f ", _vesc1.read_rpm(can_id));
+    printf("current: %.2f ", _vesc1.read_current(can_id));
+    printf("ESC current: %.2f ", _vesc1.read_esc_current(can_id));
+    printf("input_voltage: %.2f ", _vesc1.read_input_voltage(can_id));
+    printf("FET temp: %.2f \r\n", _vesc1.read_fet_temp(can_id));
+
+    ThisThread::sleep_for(10ms);
+  }
+}
+*/
