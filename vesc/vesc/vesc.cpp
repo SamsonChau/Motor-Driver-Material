@@ -195,7 +195,7 @@ float vesc::read_esc_current(int id) {
     return esc_current;
   }
 }
-// the input bus voltage provide by the vesc in A
+// the input bus voltage provide by the vesc in V
 // will return a float32 
 float vesc::read_input_voltage(int id) {
   if (id != current_id) {
