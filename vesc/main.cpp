@@ -48,8 +48,19 @@ int can_id = 90;
 // CAN can1(PA_11, PA_12, can_baud);  (choose one)
 CAN can(PB_5, PB_6, can_baud);    
 
+//define the vesc object of the vesc
 vesc _vesc1;
 
+
+/////////////////////////////////////////////////////////////////////////////
+/*
+        RTOS stuff
+        not recommanded for junior
+        This example have 2 thread
+        1. vesc_thread (read the vsec can status in 1000Hz) trigger by ThreadTicker
+        2. control_thread (send the vesc control cmd and the UART debug message in 20Hz)
+*/
+////////////////////////////////////////////////////////////////////////////
 Thread vesc_thread(osPriorityNormal);
 Thread control_thread(osPriorityLow);
 
@@ -59,12 +70,15 @@ EventQueue readQueue;
 Ticker ThreadTicker;
 Ticker printreadTicker;
                                                                                                                                                                                                                                                                                                                                 
+//call back of the vesc thread function 
+void vesc_th() { 
+    // update the vesc1 parameter once 
+    _vesc1.can_read(can_id); 
+}
 
-
-void vesc_th() { _vesc1.can_read(can_id); }
-
+//call back of the debug thread function 
 void debug_msgs() {
-  // reading value
+  // print out the values
   printf("position: %.2f ", _vesc1.read_pos(can_id));
   printf("rpm: %.2f ", _vesc1.read_rpm(can_id));
   printf("current: %.2f ", _vesc1.read_current(can_id));
@@ -73,19 +87,19 @@ void debug_msgs() {
   printf("FET temp: %.2f \r\n", _vesc1.read_fet_temp(can_id));
 }
 void control_cmd() {
-  //_vesc1.set_rpm(can_id, 10000);
-  //printf("Send one msgs\r\n");
-  printfQueue.call(&debug_msgs);
+  //_vesc1.set_rpm(can_id, 1000);         // set the vesc 1 erpm/rpm to 1000rpm
+  printfQueue.call(&debug_msgs);          // call the debug_msgs to run
 }
 int main() {
+  // intitial the vesc class at startup, need to pass the canbus interface to the init  function
   _vesc1.vesc_init(&can, can_baud);
-  _vesc1.set_monitor_id(can_id); // This enable the can bus monitor particular
-                                 // id, may improve later
-
-  // initslize the vesc
+  _vesc1.set_monitor_id(can_id);        //set up the moitoring ID of the VESC object
+  
+  // start the threads
   vesc_thread.start(callback(&readQueue, &EventQueue::dispatch_forever));
   control_thread.start(callback(&printfQueue, &EventQueue::dispatch_forever));
-  
+    
+  //setup the trigger of the thread, use Tickers to achieve
   printreadTicker.attach(readQueue.event(&vesc_th), 0.001);
   ThreadTicker.attach(printfQueue.event(&control_cmd), 0.05);
 }
