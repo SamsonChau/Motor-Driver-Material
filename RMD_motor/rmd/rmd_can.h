@@ -27,17 +27,17 @@ class rmd_can{
         void status_update2(int8_t id);
         void status_update3(int8_t id);
         
-        int set_zero(int8_t id);
-        int set_torq(int8_t id,int16_t torq);
-        int set_velocity(int8_t id,int32_t velocity);
-        int set_position(int8_t id,int32_t pos);
-        int set_position_speed(int8_t id,int32_t pos,uint16_t profile_speed);
-        int set_single_turn_angle(int8_t id,uint16_t angle, uint8_t dir);
-        int set_single_turn_angle(int8_t id,uint16_t angle, uint8_t dir, uint16_t profile_speed);
-        int set_pid_RAM(int8_t id,int8_t p_kp, int8_t p_ki, int8_t v_kp, int8_t v_ki, int8_t i_kp, int8_t i_ki);
-        int set_pid_ROM(int8_t id,int8_t p_kp, int8_t p_ki, int8_t v_kp, int8_t v_ki, int8_t i_kp, int8_t i_ki);
-        int set_acc_RAM(int8_t id,int32_t Accel);
-        int set_encoder_offset(int8_t id,int16_t pos_offset);
+        void set_zero(int8_t id);
+        void set_torq(int8_t id,int16_t torq);
+        void set_velocity(int8_t id,int32_t velocity);
+        void set_position(int8_t id,int32_t pos);
+        void set_position_speed(int8_t id,int32_t pos,uint16_t profile_speed);
+        void set_single_turn_angle(int8_t id,uint16_t angle, uint8_t dir);
+        void set_single_turn_angle_speed(int8_t id,uint16_t angle, uint16_t profile_speed, uint8_t dir);
+        void set_pid_RAM(int8_t id,int8_t p_kp, int8_t p_ki, int8_t v_kp, int8_t v_ki, int8_t i_kp, int8_t i_ki);
+        void set_pid_ROM(int8_t id,int8_t p_kp, int8_t p_ki, int8_t v_kp, int8_t v_ki, int8_t i_kp, int8_t i_ki);
+        void set_acc_RAM(int8_t id,int32_t Accel);
+        void set_encoder_offset(int8_t id,int16_t pos_offset);
 
         int8_t temp;
         uint16_t voltage;
@@ -56,9 +56,10 @@ class rmd_can{
         pid p;
         pid i;
         pid v;
-
+        bool DEBUG_RMD_LIB_MSG =  true; 
     private:
         //can operation function 
+        float map(float in, float inMin, float inMax, float outMin, float outMax);
         CANMessage Rx_msg;
         CANMessage Tx_msg;
         int16_t id;

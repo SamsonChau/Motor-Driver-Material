@@ -6,7 +6,7 @@
 #define WRITE_PID_RAM_ID    0x31
 #define WRITE_PID_ROM_ID    0x32
 #define READ_ACC_ID         0x33
-#define WRITE_ACC_ID        0x34
+#define WRIsTE_ACC_ID        0x34
 #define READ_ENCODER_ID     0x90
 #define WRITE_OFFSET_ID     0x91
 #define SET_ZERO_ID         0x19
@@ -25,6 +25,6 @@
 #define POS_LOOP_2_CMD_ID   0xA4
 #define POS_LOOP_3_CMD_ID   0xA5
 #define POS_LOOP_4_CMD_ID   0xA6
-#define DEBUG_RMD_LIB_MSG   true 
+
 
 #endif
