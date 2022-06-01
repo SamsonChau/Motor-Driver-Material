@@ -2,6 +2,7 @@
 #include <mcp2515.h>
 #include "vesc_can_id.h"
 
+#define vesc_serial_debug true
 // internal storage
 volatile int current_id;
 volatile float pid_pos;
@@ -54,10 +55,21 @@ void package_msg(uint8_t *buffer, int32_t number, int32_t *index) {
 //Send the msg to the canbus from the buffer packet
 bool can_send(int id, uint8_t packet[], int32_t len) {
   struct can_frame Txmsg;
-  Txmsg.can_id = id | CAN_EFF_FLAG;
+  Txmsg.can_id = id ;//| CAN_EFF_FLAG;
   Txmsg.can_dlc = sizeof(packet);
   for (int i = 0; i < sizeof(packet); i++) {
     Txmsg.data[i] = packet[i];
+  }
+  if(vesc_serial_debug){
+    Serial.print("TX_ID: 0x");
+    Serial.print(Txmsg.can_id);
+    Serial.print(" ID: 0x");
+    Serial.print(id, HEX);
+    Serial.print("CANID: ");
+    Serial.print(Txmsg.can_id & 0xFF );
+    Serial.print(" CMD: ");
+    Serial.print(id >>8);
+    Serial.print("\n");
   }
   mcp2515.sendMessage(MCP2515::TXB1, &Txmsg);
   return true;
@@ -74,7 +86,7 @@ void set_duty(int id, float duty) {
   int32_t send_index = 0;
   uint8_t buffer[4];
   package_msg(buffer, (int32_t)(duty * 100000.0), &send_index);
-  can_send(id | ((uint32_t)CAN_PACKET_SET_DUTY << 8), buffer, send_index);
+  can_send((uint32_t)id | ((uint32_t)CAN_PACKET_SET_DUTY << 8), buffer, send_index);
 }
 
 // current control cmd
